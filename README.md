@@ -11,19 +11,19 @@ hashes, and proof evidence. It does not contain the format tooling.
 
 ## Components
 
-- `racket/elf.rkt` — NOVA-ELF v1 writer and parser (Racket). ELF64 with the
+- `elf/elf.rkt` — NOVA-ELF v1 writer and parser (Racket). ELF64 with the
   custom sections. e_machine is 0xFF01 (EM_NOVA_SUBLEQ, unregistered,
   v1 only, processor-specific reserved range). The object is relocatable
   (ET_REL) and is loaded by a dedicated NOVA loader, never executed as
   a native Linux binary.
-- `racket/codec.rkt` — the NOVA base-encoding family. NOVA-HEX16, NOVA-BASE32,
+- `elf/codec.rkt` — the NOVA base-encoding family. NOVA-HEX16, NOVA-BASE32,
   NOVA-BASE64, NOVA-BASE256 (identity), NOVA-BASE512 (experimental
   9-bit symbols), NOVA-ROMHEX (word-addressed ROM initialization).
   These are encodings, not encryption. A custom alphabet does not add
   cryptographic security.
-- `racket/package.rkt` — the packaging pipeline. SUBLEQ image to NOVA-ELF,
+- `elf/package.rkt` — the packaging pipeline. SUBLEQ image to NOVA-ELF,
   and NOVA-ELF back to a flat SUBLEQ image.
-- `racket/verify.rkt` — the verification contract, run by execution.
+- `elf/verify.rkt` — the verification contract, run by execution.
 
 ## Sections
 
@@ -70,7 +70,7 @@ Racket is at `~/workspace/.tools/racket/bin/racket`.
 
 Run the full verification contract:
 
-  racket racket/verify.rkt
+  racket elf/verify.rkt
 
 ## Status
 
