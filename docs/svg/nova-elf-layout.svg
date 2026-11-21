@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="780" viewBox="0 0 1000 780" role="img" aria-labelledby="nova-layout-title nova-layout-desc">
+  <title id="nova-layout-title">NOVA-ELF Binary Layout</title>
+  <desc id="nova-layout-desc">Byte-accurate memory map of artifact gf256.nova.elf, 4,440 bytes: a 64-byte ELF header, eight NOVA sections and the section string table laid out 8-byte aligned, followed by the 10-entry section header table at offset 3,800. Offsets and sizes were read from the actual artifact.</desc>
+  <style>
+    .bg { fill: #0d1117; }
+    .title { fill: #e6edf3; font-family: sans-serif; font-size: 22px; font-weight: bold; }
+    .subtitle { fill: #8b949e; font-family: sans-serif; font-size: 13px; }
+    .label { fill: #e6edf3; font-family: sans-serif; font-size: 14px; font-weight: bold; }
+    .small { fill: #c9d1d9; font-family: sans-serif; font-size: 12px; }
+    .muted { fill: #8b949e; font-family: sans-serif; font-size: 12px; }
+    .mono { fill: #79c0ff; font-family: monospace; font-size: 12px; }
+    .off { fill: #d29922; font-family: monospace; font-size: 12px; }
+    .hdr { fill: #0d2137; stroke: #58a6ff; stroke-width: 1.5; }
+    .code { fill: #122b1c; stroke: #3fb950; stroke-width: 1.5; }
+    .data { fill: #1a2b4a; stroke: #58a6ff; stroke-width: 1.5; }
+    .meta { fill: #241a3a; stroke: #bc8cff; stroke-width: 1.5; }
+    .gap { fill: #161b22; stroke: #30363d; stroke-width: 1; stroke-dasharray: 4 3; }
+  </style>
+  <rect class="bg" width="1000" height="780"/>
+  <text class="title" x="30" y="40">NOVA-ELF Binary Layout</text>
+  <text class="subtitle" x="30" y="62">artifact/gf256.nova.elf — 4,440 bytes, little-endian, e_machine 0xFF01, section headers at offset 3,800</text>
+
+  <!-- column headers -->
+  <text class="muted" x="30" y="95">offset</text>
+  <text class="muted" x="110" y="95">region</text>
+  <text class="muted" x="620" y="95">size / notes</text>
+
+  <!-- ELF header -->
+  <rect class="hdr" x="30" y="105" width="940" height="44"/>
+  <text class="off" x="40" y="124">0</text>
+  <text class="label" x="110" y="124">ELF header</text>
+  <text class="small" x="110" y="142">7F E L F, class 2 (ELF64), data 1 (LE), ET_REL, e_machine 0xFF01, e_entry 0</text>
+  <text class="mono" x="620" y="124">64 bytes</text>
+  <text class="muted" x="620" y="142">e_ehsize 64, e_shentsize 64, e_shnum 10</text>
+
+  <!-- .nova.text -->
+  <rect class="code" x="30" y="153" width="940" height="44"/>
+  <text class="off" x="40" y="172">64</text>
+  <text class="label" x="110" y="172">.nova.text</text>
+  <text class="small" x="110" y="190">705 code cells as 32-bit signed LE words — 235 SUBLEQ triples</text>
+  <text class="mono" x="620" y="172">2,820 bytes</text>
+  <text class="muted" x="620" y="190">type 1, flags 6 (ALLOC+EXEC), align 4</text>
+
+  <!-- .nova.data -->
+  <rect class="data" x="30" y="201" width="940" height="44"/>
+  <text class="off" x="40" y="220">2,884</text>
+  <text class="label" x="110" y="220">.nova.data</text>
+  <text class="small" x="110" y="238">26 data cells as 32-bit signed LE words (in-a 705, in-b 706, out-r 707)</text>
+  <text class="mono" x="620" y="220">104 bytes</text>
+  <text class="muted" x="620" y="238">type 1, flags 3 (ALLOC+WRITE), align 4</text>
+
+  <!-- .nova.rodata -->
+  <rect class="data" x="30" y="249" width="940" height="44"/>
+  <text class="off" x="40" y="268">2,988</text>
+  <text class="label" x="110" y="268">.nova.rodata</text>
+  <text class="small" x="110" y="286">AES S-box, 256 bytes (SBOX from aes_custom_lowered.c)</text>
+  <text class="mono" x="620" y="268">256 bytes</text>
+  <text class="muted" x="620" y="286">type 1, flags 2 (ALLOC), align 1</text>
+
+  <!-- .nova.urom -->
+  <rect class="meta" x="30" y="297" width="940" height="44"/>
+  <text class="off" x="40" y="316">3,244</text>
+  <text class="label" x="110" y="316">.nova.urom</text>
+  <text class="small" x="110" y="334">u32 version 1, 32-byte manifest digest, 4 dispatch words (VERIFY, LOCK, EXEC, HALT)</text>
+  <text class="mono" x="620" y="316">52 bytes</text>
+  <text class="muted" x="620" y="334">type 1, flags 2 (ALLOC), align 4</text>
+
+  <!-- .nova.proof -->
+  <rect class="meta" x="30" y="345" width="940" height="44"/>
+  <text class="off" x="40" y="364">3,296</text>
+  <text class="label" x="110" y="364">.nova.proof</text>
+  <text class="small" x="110" y="382">JSON evidence: exhaustive 0/65,536, Rosette proofs, image SHA-256</text>
+  <text class="mono" x="620" y="364">197 bytes</text>
+  <text class="muted" x="620" y="382">type 1, flags 0, align 1</text>
+
+  <!-- .nova.codec -->
+  <rect class="meta" x="30" y="393" width="940" height="44"/>
+  <text class="off" x="40" y="412">3,493</text>
+  <text class="label" x="110" y="412">.nova.codec</text>
+  <text class="small" x="110" y="430">Encoding identifier string: "NOVA-BASE256 v1"</text>
+  <text class="mono" x="620" y="412">15 bytes</text>
+  <text class="muted" x="620" y="430">type 1, flags 0, align 1</text>
+
+  <!-- .nova.dag -->
+  <rect class="meta" x="30" y="441" width="940" height="44"/>
+  <text class="off" x="40" y="460">3,508</text>
+  <text class="label" x="110" y="460">.nova.dag</text>
+  <text class="small" x="110" y="478">JSON lineage: schema rijndael.dag.v1, id subleq.gf256.mul.v1, parent cryptol.gf256.mul.v1</text>
+  <text class="mono" x="620" y="460">90 bytes</text>
+  <text class="muted" x="620" y="478">type 1, flags 0, align 1</text>
+
+  <!-- .note.nova -->
+  <rect class="meta" x="30" y="489" width="940" height="44"/>
+  <text class="off" x="40" y="508">3,600</text>
+  <text class="label" x="110" y="508">.note.nova</text>
+  <text class="small" x="110" y="526">ELF note: name "NOVA", type 1, desc "NOVA-ELF v1; ISA SUBLEQ; ABI word=32-bit signed LE; entry=0; halt=explicit"</text>
+  <text class="mono" x="620" y="508">92 bytes</text>
+  <text class="muted" x="620" y="526">type 7 (SHT_NOTE), flags 0, align 4</text>
+
+  <!-- .shstrtab -->
+  <rect class="hdr" x="30" y="537" width="940" height="44"/>
+  <text class="off" x="40" y="556">3,692</text>
+  <text class="label" x="110" y="556">.shstrtab</text>
+  <text class="small" x="110" y="574">NUL-separated section names, starting with a NUL byte</text>
+  <text class="mono" x="620" y="556">102 bytes</text>
+  <text class="muted" x="620" y="574">type 3 (SHT_STRTAB), flags 0, align 1</text>
+
+  <!-- padding gap -->
+  <rect class="gap" x="30" y="585" width="940" height="26"/>
+  <text class="muted" x="110" y="603">zero padding to 8-byte alignment (offset 3,794 to 3,800)</text>
+  <text class="mono" x="620" y="603">6 bytes</text>
+
+  <!-- section header table -->
+  <rect class="hdr" x="30" y="615" width="940" height="44"/>
+  <text class="off" x="40" y="634">3,800</text>
+  <text class="label" x="110" y="634">Section header table</text>
+  <text class="small" x="110" y="652">10 entries of 64 bytes: [0] NULL, [1..8] NOVA sections, [9] .shstrtab</text>
+  <text class="mono" x="620" y="634">640 bytes</text>
+  <text class="muted" x="620" y="652">ends at 4,440 = end of file</text>
+
+  <!-- footer notes -->
+  <text class="muted" x="30" y="690">All multi-byte fields are little-endian. Section contents are laid out in section order after the 64-byte header, each padded to its alignment.</text>
+  <text class="muted" x="30" y="710">Section headers carry sh_addr 0, sh_link 0, sh_info 0, sh_entsize 0: this is a relocatable object with no program headers (e_phoff 0, e_phnum 0).</text>
+  <text class="muted" x="30" y="730">Byte offsets above are the measured layout of the shipped v1 artifact; the writer computes them from section sizes and alignments.</text>
+  <text class="muted" x="30" y="750">The NULL section [0] has no content: its size is 0 and its offset is the header end (64) by construction, not a stored payload.</text>
+</svg>

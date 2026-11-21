@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="640" viewBox="0 0 1000 640" role="img" aria-labelledby="nova-arch-title nova-arch-desc">
+  <title id="nova-arch-title">NOVA System Architecture</title>
+  <desc id="nova-arch-desc">Data flow of the NOVA-ELF system: a 731-cell SUBLEQ machine image is packaged by package.rkt using elf.rkt and codec.rkt into an ELF64 relocatable object, parsed back by the dedicated NOVA loader, and verified by verify.rkt. Format tooling is separate from the NovaDag provenance system, which records only digests and evidence.</desc>
+  <style>
+    .bg { fill: #0d1117; }
+    .panel { fill: #161b22; stroke: #30363d; stroke-width: 1.5; rx: 8; }
+    .panel-accent { fill: #0d2137; stroke: #58a6ff; stroke-width: 1.5; rx: 8; }
+    .panel-green { fill: #0f2a1a; stroke: #3fb950; stroke-width: 1.5; rx: 8; }
+    .panel-amber { fill: #2e230a; stroke: #d29922; stroke-width: 1.5; rx: 8; }
+    .title { fill: #e6edf3; font-family: sans-serif; font-size: 22px; font-weight: bold; }
+    .subtitle { fill: #8b949e; font-family: sans-serif; font-size: 13px; }
+    .label { fill: #e6edf3; font-family: sans-serif; font-size: 15px; font-weight: bold; }
+    .small { fill: #c9d1d9; font-family: sans-serif; font-size: 12px; }
+    .muted { fill: #8b949e; font-family: sans-serif; font-size: 12px; }
+    .mono { fill: #79c0ff; font-family: monospace; font-size: 12px; }
+    .arrow { stroke: #58a6ff; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    .arrow-green { stroke: #3fb950; stroke-width: 2; fill: none; marker-end: url(#arrowhead-g); }
+    .arrow-amber { stroke: #d29922; stroke-width: 2; fill: none; marker-end: url(#arrowhead-a); }
+    .flow { fill: #58a6ff; font-family: sans-serif; font-size: 12px; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#58a6ff"/></marker>
+    <marker id="arrowhead-g" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#3fb950"/></marker>
+    <marker id="arrowhead-a" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#d29922"/></marker>
+  </defs>
+  <rect class="bg" width="1000" height="640"/>
+  <text class="title" x="30" y="40">NOVA System Architecture</text>
+  <text class="subtitle" x="30" y="62">SUBLEQ image to ELF64 object to reconstructed image, with verification and provenance kept separate</text>
+
+  <!-- Stage 1: image -->
+  <rect class="panel" x="30" y="100" width="200" height="130" rx="8"/>
+  <text class="label" x="48" y="128">SUBLEQ image</text>
+  <text class="small" x="48" y="152">731 cells, 32-bit signed</text>
+  <text class="small" x="48" y="172">705 code + 26 data cells</text>
+  <text class="mono" x="48" y="196">gf256: 235 triples</text>
+  <text class="muted" x="48" y="216">in-a 705, in-b 706, out-r 707</text>
+
+  <!-- arrow 1 -->
+  <path class="arrow" d="M 230 165 L 300 165"/>
+  <text class="flow" x="238" y="150">package</text>
+
+  <!-- Stage 2: packaging pipeline -->
+  <rect class="panel-accent" x="300" y="100" width="240" height="190" rx="8"/>
+  <text class="label" x="318" y="128">Packaging pipeline</text>
+  <text class="mono" x="318" y="152">package.rkt</text>
+  <text class="small" x="318" y="172">splits code / data cells</text>
+  <text class="small" x="318" y="190">builds .nova.urom descriptor</text>
+  <text class="mono" x="318" y="214">elf.rkt</text>
+  <text class="small" x="318" y="232">writes ELF64, e_machine 0xFF01</text>
+  <text class="mono" x="318" y="256">codec.rkt</text>
+  <text class="small" x="318" y="274">HEX16 / BASE64 / ROMHEX text</text>
+
+  <!-- arrow 2 -->
+  <path class="arrow" d="M 540 165 L 610 165"/>
+  <text class="flow" x="548" y="150">write</text>
+
+  <!-- Stage 3: ELF object -->
+  <rect class="panel" x="610" y="100" width="200" height="130" rx="8"/>
+  <text class="label" x="628" y="128">ELF64 object</text>
+  <text class="small" x="628" y="152">4,440 bytes, ET_REL</text>
+  <text class="small" x="628" y="172">10 sections, 8 NOVA +</text>
+  <text class="small" x="628" y="190">NULL + .shstrtab</text>
+  <text class="mono" x="628" y="214">artifact/gf256.nova.elf</text>
+
+  <!-- arrow 3: down to loader -->
+  <path class="arrow" d="M 710 230 L 710 300"/>
+  <text class="flow" x="720" y="270">read</text>
+
+  <!-- Stage 4: loader -->
+  <rect class="panel-accent" x="610" y="300" width="200" height="130" rx="8"/>
+  <text class="label" x="628" y="328">Dedicated NOVA loader</text>
+  <text class="mono" x="628" y="352">nova-elf-read</text>
+  <text class="small" x="628" y="372">checks magic, class, LE,</text>
+  <text class="small" x="628" y="390">e_machine = 0xFF01</text>
+  <text class="mono" x="628" y="412">load-subleq-image</text>
+
+  <!-- arrow 4: back left -->
+  <path class="arrow" d="M 610 365 L 540 365"/>
+  <text class="flow" x="548" y="350">rebuild</text>
+
+  <!-- Stage 5: reconstructed image -->
+  <rect class="panel-green" x="300" y="300" width="240" height="130" rx="8"/>
+  <text class="label" x="318" y="328">Reconstructed image</text>
+  <text class="small" x="318" y="352">flat 731-cell image</text>
+  <text class="mono" x="318" y="376">Load(ELF(M)) = M</text>
+  <text class="small" x="318" y="396">byte-identical to source</text>
+  <text class="small" x="318" y="416">0 mismatches / 65,536 pairs</text>
+
+  <!-- arrow 5: to verify -->
+  <path class="arrow-green" d="M 420 430 L 420 490"/>
+  <text class="flow" x="430" y="465" fill="#3fb950">check</text>
+
+  <!-- verify box -->
+  <rect class="panel-green" x="300" y="490" width="240" height="110" rx="8"/>
+  <text class="label" x="318" y="518">Verification contract</text>
+  <text class="mono" x="318" y="542">verify.rkt</text>
+  <text class="small" x="318" y="562">5 codec round trips, ELF round trip,</text>
+  <text class="small" x="318" y="580">exhaustive GF semantics, ROMHEX</text>
+
+  <!-- NovaDag boundary -->
+  <rect class="panel-amber" x="610" y="490" width="360" height="110" rx="8"/>
+  <text class="label" x="628" y="518">NovaDag provenance (separate)</text>
+  <text class="small" x="628" y="542">records digests + evidence only</text>
+  <text class="mono" x="628" y="562">image sha256 153be573...</text>
+  <text class="small" x="628" y="580">node subleq.gf256.mul.v1, status proved</text>
+  <text class="muted" x="628" y="596">(within the tested machine model)</text>
+
+  <!-- arrow from verify to NovaDag -->
+  <path class="arrow-amber" d="M 540 545 L 610 545"/>
+  <text class="flow" x="548" y="530" fill="#d29922">evidence</text>
+
+  <!-- left annotation: outside repo -->
+  <rect class="panel" x="30" y="300" width="200" height="130" rx="8"/>
+  <text class="label" x="48" y="328">Upstream (outside repo)</text>
+  <text class="small" x="48" y="352">Cryptol GF(2^8) spec</text>
+  <text class="small" x="48" y="372">Racket / Rosette lowering</text>
+  <text class="small" x="48" y="392">subleq-lowering +</text>
+  <text class="small" x="48" y="412">subleq-isa-racket</text>
+  <path class="arrow" d="M 230 365 L 300 365"/>
+  <text class="flow" x="238" y="350">731 cells</text>
+
+  <!-- bottom note -->
+  <text class="muted" x="30" y="625">The operating system ELF loader never runs this object: it is relocatable (ET_REL) and loads only through the dedicated NOVA loader.</text>
+</svg>

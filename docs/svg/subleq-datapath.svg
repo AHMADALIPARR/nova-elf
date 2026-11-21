@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680" role="img" aria-labelledby="subleq-title subleq-desc">
+  <title id="subleq-title">SUBLEQ Machine Datapath</title>
+  <desc id="subleq-desc">One SUBLEQ step: fetch the triple (a, b, c) at the program counter, read mem[a] and mem[b], compute mem[b] minus mem[a], write the result back to mem[b], and branch to c when the result is less than or equal to zero, otherwise advance the program counter by three. Worked example uses the verified trace: mem[10] is 5, mem[11] is 8, instruction (10, 11, 9) writes 3 and advances to pc 3.</desc>
+  <style>
+    .bg { fill: #0d1117; }
+    .panel { fill: #161b22; stroke: #30363d; stroke-width: 1.5; rx: 8; }
+    .panel-blue { fill: #0d2137; stroke: #58a6ff; stroke-width: 1.5; rx: 8; }
+    .panel-green { fill: #0f2a1a; stroke: #3fb950; stroke-width: 1.5; rx: 8; }
+    .panel-red { fill: #2e1616; stroke: #f85149; stroke-width: 1.5; rx: 8; }
+    .title { fill: #e6edf3; font-family: sans-serif; font-size: 22px; font-weight: bold; }
+    .subtitle { fill: #8b949e; font-family: sans-serif; font-size: 13px; }
+    .label { fill: #e6edf3; font-family: sans-serif; font-size: 15px; font-weight: bold; }
+    .small { fill: #c9d1d9; font-family: sans-serif; font-size: 12px; }
+    .muted { fill: #8b949e; font-family: sans-serif; font-size: 12px; }
+    .mono { fill: #79c0ff; font-family: monospace; font-size: 13px; }
+    .mono-big { fill: #79c0ff; font-family: monospace; font-size: 16px; }
+    .formula { fill: #e6edf3; font-family: monospace; font-size: 16px; }
+    .arrow { stroke: #58a6ff; stroke-width: 2; fill: none; marker-end: url(#ah); }
+    .arrow-g { stroke: #3fb950; stroke-width: 2; fill: none; marker-end: url(#ahg); }
+    .arrow-r { stroke: #f85149; stroke-width: 2; fill: none; marker-end: url(#ahr); }
+    .flow { fill: #58a6ff; font-family: sans-serif; font-size: 12px; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#58a6ff"/></marker>
+    <marker id="ahg" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#3fb950"/></marker>
+    <marker id="ahr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#f85149"/></marker>
+  </defs>
+  <rect class="bg" width="1000" height="680"/>
+  <text class="title" x="30" y="40">SUBLEQ Machine Datapath</text>
+  <text class="subtitle" x="30" y="62">One instruction, three cells per step. Memory holds 65,536 exact-integer cells; the program counter is a word address.</text>
+
+  <!-- formula banner -->
+  <rect class="panel-blue" x="30" y="80" width="940" height="64" rx="8"/>
+  <text class="formula" x="50" y="108">mem[b] &lt;- mem[b] - mem[a]</text>
+  <text class="formula" x="50" y="132">if mem[b] &lt;= 0 then pc &lt;- c else pc &lt;- pc + 3</text>
+  <text class="muted" x="560" y="108">a, b, c are the three cells at pc, pc+1, pc+2</text>
+  <text class="muted" x="560" y="132">halt: next pc outside [0, 65535] — no HALT opcode</text>
+
+  <!-- Step 1: fetch -->
+  <rect class="panel" x="30" y="170" width="200" height="120" rx="8"/>
+  <text class="label" x="48" y="198">1. Fetch</text>
+  <text class="small" x="48" y="220">a = mem[pc]</text>
+  <text class="small" x="48" y="240">b = mem[pc+1]</text>
+  <text class="small" x="48" y="260">c = mem[pc+2]</text>
+  <text class="muted" x="48" y="280">pc+2 must be &lt; 65,536</text>
+
+  <path class="arrow" d="M 230 230 L 300 230"/>
+  <text class="flow" x="238" y="215">triple</text>
+
+  <!-- Step 2: read operands -->
+  <rect class="panel" x="300" y="170" width="200" height="120" rx="8"/>
+  <text class="label" x="318" y="198">2. Read operands</text>
+  <text class="small" x="318" y="220">x = mem[a]</text>
+  <text class="small" x="318" y="240">y = mem[b]</text>
+  <text class="muted" x="318" y="262">a, b outside [0, 65535]</text>
+  <text class="muted" x="318" y="280">-&gt; status 'error</text>
+
+  <path class="arrow" d="M 500 230 L 570 230"/>
+  <text class="flow" x="508" y="215">x, y</text>
+
+  <!-- Step 3: subtract -->
+  <rect class="panel-blue" x="570" y="170" width="200" height="120" rx="8"/>
+  <text class="label" x="588" y="198">3. Subtract</text>
+  <text class="mono-big" x="588" y="228">result = y - x</text>
+  <text class="small" x="588" y="252">exact integers, unbounded</text>
+  <text class="small" x="588" y="272">no wrap, no overflow trap</text>
+
+  <path class="arrow" d="M 670 290 L 670 350"/>
+  <text class="flow" x="680" y="325">result</text>
+
+  <!-- Step 4: writeback + branch -->
+  <rect class="panel-green" x="570" y="350" width="400" height="120" rx="8"/>
+  <text class="label" x="588" y="378">4. Write back and branch</text>
+  <text class="small" x="588" y="400">mem[b] &lt;- result (always written, even when branching)</text>
+  <text class="small" x="588" y="422">result &lt;= 0: pc &lt;- c (taken branch)</text>
+  <text class="small" x="588" y="444">result &gt; 0: pc &lt;- pc + 3 (fall through)</text>
+  <text class="muted" x="588" y="464">next pc outside [0, 65535]: status 'halted</text>
+
+  <!-- Step 5: memory -->
+  <rect class="panel" x="30" y="350" width="470" height="120" rx="8"/>
+  <text class="label" x="48" y="378">Memory</text>
+  <text class="small" x="48" y="400">65,536 cells (MEM-SIZE), word-addressed, entry at word address 0</text>
+  <text class="small" x="48" y="422">Code and data share one address space: the first 705 cells are the</text>
+  <text class="small" x="48" y="444">program (235 triples), cells 705..730 are data (in-a, in-b, out-r, ...)</text>
+  <path class="arrow-g" d="M 500 410 L 570 410"/>
+  <text class="flow" x="505" y="395" fill="#3fb950">write</text>
+
+  <!-- Worked example -->
+  <rect class="panel-red" x="30" y="500" width="940" height="150" rx="8"/>
+  <text class="label" x="48" y="528">Worked example — verified by executing the machine (Racket v8.15)</text>
+  <text class="mono" x="48" y="554">mem[10] = 5, mem[11] = 8, pc = 0, instruction at 0 is (10, 11, 9)</text>
+  <text class="small" x="48" y="578">step 1: result = 8 - 5 = 3 &gt; 0, so mem[11] &lt;- 3 and pc &lt;- 0 + 3 = 3</text>
+  <text class="small" x="48" y="600">step 2: instruction at 3 is (10, 11, 6): result = 3 - 5 = -2 &lt;= 0, so mem[11] &lt;- -2 and pc &lt;- 6</text>
+  <text class="small" x="48" y="622">step 3: instruction at 6 is (10, 11, 70000): result = -2 - 5 = -7 &lt;= 0, so pc &lt;- 70000, outside [0, 65535] -&gt; halted</text>
+  <text class="muted" x="48" y="642">The same trace shape appears in the real image: (710, 710, 3) subtracts a cell from itself, writes 0, and always branches.</text>
+</svg>

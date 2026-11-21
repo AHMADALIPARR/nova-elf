@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="720" viewBox="0 0 1000 720" role="img" aria-labelledby="codec-title codec-desc">
+  <title id="codec-title">Codec and Serialization Transformations</title>
+  <desc id="codec-desc">The NOVA base-encoding family. Bytes enter on the left and each codec produces a reversible textual or binary representation on the right. NOVA-HEX16, BASE32 and BASE64 are standard reversible text encodings; BASE256 is the byte identity; BASE512 packs 8-bit bytes into experimental 9-bit symbols; ROMHEX is word-addressed ROM initialization with explicit addresses. Encodings are representation changes, not encryption.</desc>
+  <style>
+    .bg { fill: #0d1117; }
+    .panel { fill: #161b22; stroke: #30363d; stroke-width: 1.5; rx: 8; }
+    .panel-blue { fill: #0d2137; stroke: #58a6ff; stroke-width: 1.5; rx: 8; }
+    .panel-green { fill: #0f2a1a; stroke: #3fb950; stroke-width: 1.5; rx: 8; }
+    .panel-amber { fill: #2e230a; stroke: #d29922; stroke-width: 1.5; rx: 8; }
+    .title { fill: #e6edf3; font-family: sans-serif; font-size: 22px; font-weight: bold; }
+    .subtitle { fill: #8b949e; font-family: sans-serif; font-size: 13px; }
+    .label { fill: #e6edf3; font-family: sans-serif; font-size: 14px; font-weight: bold; }
+    .small { fill: #c9d1d9; font-family: sans-serif; font-size: 12px; }
+    .muted { fill: #8b949e; font-family: sans-serif; font-size: 12px; }
+    .mono { fill: #79c0ff; font-family: monospace; font-size: 12px; }
+    .arrow { stroke: #58a6ff; stroke-width: 2; fill: none; marker-end: url(#ah); }
+    .arrow-g { stroke: #3fb950; stroke-width: 2; fill: none; marker-end: url(#ahg); }
+    .flow { fill: #58a6ff; font-family: sans-serif; font-size: 12px; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#58a6ff"/></marker>
+    <marker id="ahg" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#3fb950"/></marker>
+  </defs>
+  <rect class="bg" width="1000" height="720"/>
+  <text class="title" x="30" y="40">Codec and Serialization Transformations</text>
+  <text class="subtitle" x="30" y="62">Every codec is bijective over its supported inputs: D(E(B)) = B. Bytes 57 83 00 FF are the running example, verified by execution.</text>
+
+  <!-- input -->
+  <rect class="panel-blue" x="30" y="100" width="180" height="110" rx="8"/>
+  <text class="label" x="48" y="128">Input bytes</text>
+  <text class="mono" x="48" y="152">57 83 00 FF</text>
+  <text class="small" x="48" y="174">4 bytes, 32 bits</text>
+  <text class="muted" x="48" y="194">or: 731 signed cells</text>
+
+  <!-- HEX16 -->
+  <rect class="panel" x="300" y="90" width="330" height="62" rx="8"/>
+  <text class="label" x="318" y="114">NOVA-HEX16</text>
+  <text class="mono" x="318" y="136">578300ff</text>
+  <text class="muted" x="470" y="114">2 lowercase hex chars / byte</text>
+  <text class="muted" x="470" y="136">odd length or bad digit: error</text>
+  <path class="arrow" d="M 210 125 L 300 121"/>
+
+  <!-- BASE32 -->
+  <rect class="panel" x="300" y="162" width="330" height="62" rx="8"/>
+  <text class="label" x="318" y="186">NOVA-BASE32 (RFC 4648)</text>
+  <text class="mono" x="318" y="208">K6BQ==== (for bytes 57 83)</text>
+  <text class="muted" x="470" y="186">alphabet A-Z2-7, = padding</text>
+  <text class="muted" x="470" y="208">5-bit groups, MSB first</text>
+  <path class="arrow" d="M 210 155 L 300 193"/>
+
+  <!-- BASE64 -->
+  <rect class="panel" x="300" y="234" width="330" height="62" rx="8"/>
+  <text class="label" x="318" y="258">NOVA-BASE64 (RFC 4648)</text>
+  <text class="mono" x="318" y="280">V4MA/w==</text>
+  <text class="muted" x="470" y="258">Racket net/base64, 6-bit groups</text>
+  <text class="muted" x="470" y="280">= padding, standard alphabet</text>
+  <path class="arrow" d="M 210 175 L 300 265"/>
+
+  <!-- BASE256 -->
+  <rect class="panel-green" x="300" y="306" width="330" height="62" rx="8"/>
+  <text class="label" x="318" y="330">NOVA-BASE256 (identity)</text>
+  <text class="mono" x="318" y="352">57 83 00 FF — unchanged</text>
+  <text class="muted" x="470" y="330">one byte per symbol</text>
+  <text class="muted" x="470" y="352">the canonical binary form</text>
+  <path class="arrow-g" d="M 210 185 L 300 337"/>
+
+  <!-- BASE512 -->
+  <rect class="panel-amber" x="300" y="378" width="330" height="62" rx="8"/>
+  <text class="label" x="318" y="402">NOVA-BASE512 (experimental)</text>
+  <text class="mono" x="318" y="424">byte 57 -&gt; U+01AE (1 symbol)</text>
+  <text class="muted" x="470" y="402">9-bit symbols, U+0100..U+02FF</text>
+  <text class="muted" x="470" y="424">decode checks padding bits are 0</text>
+  <path class="arrow" d="M 210 200 L 300 409"/>
+
+  <!-- ROMHEX -->
+  <rect class="panel-amber" x="300" y="450" width="330" height="86" rx="8"/>
+  <text class="label" x="318" y="474">NOVA-ROMHEX (word-addressed)</text>
+  <text class="mono" x="318" y="496">00000000 000002c6</text>
+  <text class="mono" x="318" y="514">00000003 ffffffff</text>
+  <text class="muted" x="470" y="474">8 hex addr + space + 8 hex value</text>
+  <text class="muted" x="470" y="496"># comments; missing addr decodes 0</text>
+  <text class="muted" x="470" y="514">values are 32-bit two's complement</text>
+  <path class="arrow" d="M 210 205 L 300 480"/>
+
+  <!-- right column: reversibility -->
+  <rect class="panel-green" x="680" y="90" width="290" height="200" rx="8"/>
+  <text class="label" x="698" y="118">Reversible, not secret</text>
+  <text class="small" x="698" y="142">Every codec round-trips exactly:</text>
+  <text class="mono" x="698" y="164">D_c(E_c(B)) = B</text>
+  <text class="small" x="698" y="188">Verified on all 256 byte values</text>
+  <text class="small" x="698" y="208">for HEX16, BASE32, BASE64,</text>
+  <text class="small" x="698" y="228">BASE256 and BASE512.</text>
+  <text class="small" x="698" y="252">A custom alphabet adds no</text>
+  <text class="small" x="698" y="272">confidentiality: these are</text>
+  <text class="small" x="698" y="290">encodings, not encryption.</text>
+
+  <!-- identity note -->
+  <rect class="panel" x="680" y="306" width="290" height="230" rx="8"/>
+  <text class="label" x="698" y="334">Identity lives in the image</text>
+  <text class="small" x="698" y="358">SHA-256 is kept over the canonical</text>
+  <text class="small" x="698" y="378">binary image (731 cells), never over</text>
+  <text class="small" x="698" y="398">a textual encoding:</text>
+  <text class="mono" x="698" y="422">153be573ab87f6a6...</text>
+  <text class="small" x="698" y="446">Encodings can change without</text>
+  <text class="small" x="698" y="466">changing the identity of the</text>
+  <text class="small" x="698" y="486">underlying microcode.</text>
+  <text class="muted" x="698" y="512">ELF file hash differs (headers,</text>
+  <text class="muted" x="698" y="530">metadata, proof records included).</text>
+
+  <!-- bottom: artifact encodings -->
+  <rect class="panel-blue" x="30" y="570" width="940" height="120" rx="8"/>
+  <text class="label" x="48" y="598">Shipped artifact encodings of the same 4,440-byte ELF</text>
+  <text class="mono" x="48" y="622">gf256.nova.hex16 — 8,880 bytes — 3e25e2a7...</text>
+  <text class="mono" x="48" y="644">gf256.nova.b64 — 5,920 bytes — 5bd543bf...</text>
+  <text class="mono" x="48" y="666">gf256.nova.romhex — 13,158 bytes, 731 lines — 9c570b35... (encodes the 731-cell image, not the ELF)</text>
+  <text class="muted" x="48" y="686">ROMHEX is the odd one out: it serializes the machine image for a ROM loader, while the other codecs serialize the ELF file itself.</text>
+</svg>
